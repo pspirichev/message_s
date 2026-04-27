@@ -57,13 +57,13 @@ int test_4() {
     char* line = X509_NAME_oneline(X509_get_subject_name(cert), nullptr, 0);
     std::cout << "Subject: " << line << std::endl;
     OPENSSL_free(line);
-    std::cout << message_s::save_cert_to_disk(cert, "/home/user0/CLionProjects/message_s/") << std::endl;
+    std::cout << message_s::save_cert_to_disk(cert, "/home/user0/dev/message_s/") << std::endl;
     X509_free(cert);
     EVP_PKEY_free(pkey);
     return 0;
 }
 
 int main() {
-    test_3();
+    test_4();
     return 0;
 }

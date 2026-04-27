@@ -5,27 +5,25 @@
 // This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 //
 // Created by user0 on 27.04.2026.
 //
 
-#ifndef MESSAGE_S_UTILS_H
-#define MESSAGE_S_UTILS_H
-#include <source_location>
-#include <string>
+#include <chrono>
+
+#include "utils.h"
+#include <iostream>
 
 namespace message_s {
-    int init_config_folder();
-    bool check_config_folder_initiated();
-    std::string get_config_folder();
-
-    /**
-     * @brief Shortcut function to throw some errors in cerr with timestap and trace data
-     * @param what_to_puke What do you want to show in cerr
-     * @param location Do not use
-     */
-    void puke(const std::string& what_to_puke, std::source_location location = std::source_location::current());
+    void puke(const std::string& what_to_puke, const std::source_location location) {
+        auto now = std::chrono::system_clock::now();
+        std::cerr <<
+            std::format("{:%Y-%m-%d %H:%M:%S}: ", now) <<
+                location.function_name() <<
+                    " at " <<
+                        location.file_name() <<
+                            std::endl <<
+                            what_to_puke <<
+                                std::endl;
+    }
 }
-
-#endif //MESSAGE_S_UTILS_H

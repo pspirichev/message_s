@@ -38,29 +38,31 @@ namespace message_s {
         std::vector<uint8_t> get_ssl_cert_fingerprint_bin(const X509* cert);
 
         /**
-         * @brief
-         * @param cert
-         * @param folder_name
-         * @return
+         * @brief Save provided X509 certificate to filesystem at provided folder at a name of CN at certificate
+         * @param cert X509 certificate to save object pointer
+         * @param folder_name Full folder name from the root of the disk
+         * @return 0 - success, 1 - No certificate provided, 2 - Empty folder name, 3 - Can not open file at provided directory, 4 - Can not write a certificate to opened file
          */
         unsigned int save_cert_to_disk(const X509* cert, std::string folder_name);
 
         /**
-         * @brief
-         * @param key
-         * @param folder_name
-         * @return
+         * @brief Save provided public and private keys to filesystem at provided folder at a names public.pem and private.pem
+         * @param key EVP_KEY envelope containing keys to save pointer
+         * @param folder_name Full folder name from the root of the disk
+         * @return 0 - success, 1 - No keys envelope provided, 2 - Empty folder name, 3 - Can not open file at provided directory, 4 - Can not write one of the keys to opened file
          */
         unsigned int save_kay_to_disk(const EVP_PKEY* key, std::string folder_name);
 
         /**
-         * @brief
-         * @param cert
-         * @param key
-         * @param file_name
-         * @return
+         * @brief Save provided certificate, public and private keys to filesystem at provided folder at a names of CN at certificate and public.pem and private.pem for keys
+         * @param cert 509 certificate to save object pointer
+         * @param key EVP_KEY envelope containing keys to save pointer
+         * @param folder_name Full folder name from the root of the disk
+         * @param cert_res Result of internal save_cert_to_disk()
+         * @param key_res Result of internal save_kay_to_disk()
+         * @return 0 - success, 1 - internal error, see cert_res and key_res
          */
-        unsigned int save_cert_key_pair_to_disk(const X509* cert, const EVP_PKEY* key, std::string file_name);
+        unsigned int save_cert_key_pair_to_disk(const X509* cert, const EVP_PKEY* key, const std::string& folder_name, unsigned int* cert_res, unsigned int* key_res);
 } // message_s
 
 #endif //MESSAGE_S_GENERATE_SSL_CERT_H
