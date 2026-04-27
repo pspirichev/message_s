@@ -1,0 +1,15 @@
+ver:
+encrypted:
+    username:
+    device_name:
+    ed25519:
+        private_key: #argon2
+        public_key:
+    X3DH:
+        Signed Pre-key (private):
+        Signature:
+        List keys:
+            Key0:
+            Key1:
+            Key2:
+Checksum:
