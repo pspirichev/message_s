@@ -1,0 +1,6 @@
+.idea/
+cmake-build-*/
+*.o
+*.bin
+*.pem
+*.key
