@@ -16,6 +16,7 @@ add_executable(message_s main.cpp
         utils/utils.h
         cipher/save_cert_key_to_disk.cpp
         utils/puke.cpp
+        cipher/load_cert_key_from_disk.cpp
 )
 
 #tests
@@ -28,6 +29,7 @@ add_executable(message_s_test tests/main_tests.cpp
         utils/utils.h
         cipher/save_cert_key_to_disk.cpp
         utils/puke.cpp
+        cipher/load_cert_key_from_disk.cpp
 )
 
 target_link_libraries(message_s PRIVATE OpenSSL::SSL OpenSSL::Crypto)

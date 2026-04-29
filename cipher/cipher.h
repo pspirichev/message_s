@@ -23,20 +23,22 @@ namespace message_s {
         /// @return 0 - success, 1 - can't create X509 object, 2 - can't create EvP_PKEY object, 3 - can't sign certificate
         unsigned int generate_ssl_cert(unsigned int ttl_sec, const unsigned char* common_name, X509** cert, EVP_PKEY** pkey);
 
+        //Fingerprint section
         /**
-         * @brief Get SHA256 hash of certificate in string human-readable format
+         * @brief Get SHA256 hash of certificates public key in string human-readable format
          * @param cert Certificate for getting hash of
-         * @return String of human-readable representation of certificate
+         * @return String of human-readable representation of certificates public key
          */
-        std::string get_ssl_cert_fingerprint(const X509* cert);
+        std::string get_ssl_cert_pubkey_fingerprint(const X509* cert);
 
         /**
-         * @brief et SHA256 hash of certificate in binary format
+         * @brief et SHA256 hash of certificates public key in binary format
          * @param cert Certificate for getting hash of
-         * @return Binary vector digest of the DER representation of their entire data of 'cert' param
+         * @return Binary vector digest of the DER representation of certificates public key
          */
-        std::vector<uint8_t> get_ssl_cert_fingerprint_bin(const X509* cert);
+        std::vector<uint8_t> get_ssl_cert_pubkey_fingerprint_bin(const X509* cert);
 
+        //Save to disk section
         /**
          * @brief Save provided X509 certificate to filesystem at provided folder at a name of CN at certificate
          * @param cert X509 certificate to save object pointer
@@ -63,6 +65,14 @@ namespace message_s {
          * @return 0 - success, 1 - internal error, see cert_res and key_res
          */
         unsigned int save_cert_key_pair_to_disk(const X509* cert, const EVP_PKEY* key, const std::string& folder_name, unsigned int* cert_res, unsigned int* key_res);
+
+        //load from disk section
+
+        unsigned int load_cert_from_disk(X509** cert, const std::string& certificate_file_name);
+
+        unsigned int load_key_from_disk(EVP_PKEY** key, const std::string& private_key_file_name);
+
+        unsigned int load_cert_key_pair_from_disk(X509** cert, EVP_PKEY** key, const std::string& certificate_file_name, const std::string& private_key_file_name);
 } // message_s
 
 #endif //MESSAGE_S_GENERATE_SSL_CERT_H

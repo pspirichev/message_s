@@ -12,35 +12,58 @@
 #include <openssl/x509.h>
 
 #include "cipher.h"
+#include "../utils/utils.h"
 
 namespace message_s {
-    std::string get_ssl_cert_fingerprint(const X509* cert) {
+    bool get_ssl_cert_pubkey_hash_common(const X509* cert, unsigned int& md_len, unsigned char* md) {
         if (!cert) {
+            puke("No certificate provided");
             return "";
         }
 
-        unsigned char md[EVP_MAX_MD_SIZE];
-        unsigned int n;
+        X509_PUBKEY* pubkey = X509_get_X509_PUBKEY(cert);
+        if (!pubkey) {
+            puke("No pubkey in provided certificate found");
+            return "";
+        }
 
-        if (X509_digest(cert, EVP_sha256(), md, &n)) {
+        unsigned char* der = nullptr;
+        int der_len = i2d_X509_PUBKEY(pubkey, &der);
+        if (der_len < 0 || !der) {
+            puke("Can not get DER binary representation of public key");
+            return "";
+        }
+
+        if (EVP_Digest(der, der_len, md, &md_len, EVP_sha256(), nullptr)) {
+            return true;
+        }
+
+        puke("Digestion failed");
+        return false;
+    }
+
+    std::string get_ssl_cert_pubkey_fingerprint(const X509* cert) {
+        unsigned char md[EVP_MAX_MD_SIZE];
+        unsigned int md_len;
+
+       if (get_ssl_cert_pubkey_hash_common(cert, md_len, md)) {
             std::stringstream ss;
-            for (unsigned int i = 0; i < n; i++) {
+            for (unsigned int i = 0; i < md_len; i++) {
                 ss << std::hex << std::setw(2) << std::setfill('0') << std::uppercase << static_cast<int>(md[i]);
-                if (i < n - 1) ss << ":";
+                if (i < md_len - 1) ss << ":";
             }
             return ss.str();
         }
+
         return "";
     }
 
-    std::vector<uint8_t> get_ssl_cert_fingerprint_bin(const X509* cert) {
-        if (!cert) return {};
-
+    std::vector<uint8_t> get_ssl_cert_pubkey_fingerprint_bin(const X509* cert) {
         unsigned char md[EVP_MAX_MD_SIZE];
-        unsigned int n;
+        unsigned int md_len;
 
-        if (X509_digest(cert, EVP_sha256(), md, &n)) {
-            return std::vector<uint8_t>(md, md + n);
+        if (get_ssl_cert_pubkey_hash_common(cert, md_len, md)) {
+            return std::vector<uint8_t>(md, md + md_len);
         }
 
         return {};

@@ -8,19 +8,5 @@
 
 #ifndef MESSAGE_S_COMMON_TYPES_H
 #define MESSAGE_S_COMMON_TYPES_H
-#include <memory>
-#include <openssl/types.h>
-#include <openssl/x509.h>
-
-namespace message_s {
-    //For X509 self-signed certificate generation
-    using X509_ptr = std::unique_ptr<X509, decltype(&X509_free)>;
-    using EVP_PKEY_ptr = std::unique_ptr<EVP_PKEY, decltype(&EVP_PKEY_free)>;
-    struct CertKeySafePair {
-        X509_ptr cert;
-        EVP_PKEY_ptr pkey;
-    };
-
-}
 
 #endif //MESSAGE_S_COMMON_TYPES_H
