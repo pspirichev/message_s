@@ -1,6 +1,5 @@
 .idea/
 cmake-build-*/
-docs/
 *.o
 *.bin
 *.pem
